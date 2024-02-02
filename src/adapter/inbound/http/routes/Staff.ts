@@ -1,6 +1,7 @@
 import { RouteOptions } from "fastify";
 import fastifyPlugin from "fastify-plugin";
-import { LoginHandler, RegisterHandler } from "../controllers/User";
+import { CreateTaskHandler, LoginHandler, RegisterHandler } from "../controllers/Staff";
+import * as Auth from "../middleware/Auth";
 
 
 const routes: RouteOptions[] = [
@@ -36,6 +37,29 @@ const routes: RouteOptions[] = [
             }
         },
         handler: LoginHandler
+    },
+    {
+        method: ["POST"],
+        url: "/tasks",
+        schema: {
+            tags: ["Staff Services"],
+            security: [
+                {
+                    authorization: []
+                }
+            ],
+            body: {
+                type: "object",
+                properties: {
+                    content: { type: "string" },
+                    title: { type: "string" },
+                    is_shared: { type: "boolean" },
+                    notified_on: { type: "string" }
+                }
+            }
+        },
+        preHandler: Auth.CheckAuth,
+        handler: CreateTaskHandler
     }
 ]
 

@@ -1,6 +1,6 @@
 import { RouteOptions } from "fastify";
 import fastifyPlugin from "fastify-plugin";
-import { GetDataSourcesHandler, UserController } from "../controllers/User";
+import { GetDataSourcesHandler, UserController } from "../controllers/Staff";
 
 
 const routes: RouteOptions[] = [
