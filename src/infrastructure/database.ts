@@ -1,4 +1,4 @@
-import { DataSource, DataSourceOptions } from "typeorm";
+import { DataSource } from "typeorm";
 import { AddDataSourceParams } from "../domain/models/App";
 
 class DatabaseInfrastructure {

@@ -2,6 +2,9 @@ import { RouteOptions } from "fastify";
 import fastifyPlugin from "fastify-plugin";
 import { CreateTaskHandler, LoginHandler, RegisterHandler } from "../controllers/Staff";
 import * as Auth from "../middleware/Auth";
+import { baseSchema } from "../../../../domain/models/App";
+import { LoginRequest, RegisterRequest } from "../../../../domain/models/User";
+import { CreateTaskRequest } from "../../../../domain/models/Task";
 
 
 const routes: RouteOptions[] = [
@@ -10,7 +13,7 @@ const routes: RouteOptions[] = [
         url: "/register",
         schema: {
             tags: ["Staff Services"],
-            body: {
+            body: baseSchema<RegisterRequest>({
                 type: "object",
                 properties: {
                     first_name: { type: "string" },
@@ -19,7 +22,7 @@ const routes: RouteOptions[] = [
                     password: { type: "string" },
                     profile_img: { type: "string" }
                 }
-            }
+            })
         },
         handler: RegisterHandler
     },
@@ -28,12 +31,22 @@ const routes: RouteOptions[] = [
         url: '/login',
         schema: {
             tags: ["Staff Services"],
-            body: {
-                type: 'object',
+            body: baseSchema<LoginRequest>({
+                type: "object",
                 properties: {
                     email: { type: 'string' },
                     password: { type: "string" }
                 }
+            }),
+            response: {
+                200: baseSchema({
+                    type: "object",
+                    properties: {
+                        message: {
+                            type: "string"
+                        }
+                    }
+                })
             }
         },
         handler: LoginHandler
@@ -48,18 +61,23 @@ const routes: RouteOptions[] = [
                     authorization: []
                 }
             ],
-            body: {
+            body: baseSchema<CreateTaskRequest>({
                 type: "object",
                 properties: {
                     content: { type: "string" },
                     title: { type: "string" },
                     is_shared: { type: "boolean" },
-                    notified_on: { type: "string" }
+                    notified_on: { type: "number" }
                 }
-            }
+            })
         },
         preHandler: Auth.CheckAuth,
         handler: CreateTaskHandler
+    },
+    {
+        method: ["GET"],
+        url: "/tasks",
+        handler: () => "This is new"
     }
 ]
 

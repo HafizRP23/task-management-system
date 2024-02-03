@@ -13,10 +13,26 @@ export const envSchema = yup.object({
     JWT_KEY: yup.string().required()
 })
 
-export function baseResponse(data: BaseResponseSchema) {
-    if(data.type == "string") {
+export function baseSchema<T>(data: BaseResponseSchema<T>) {
+    if(data.type == "array") {
         return {
             type: data.type,
+            items: data.items
         }
+    } else if (data.type == "object") {
+        return {
+            type: data.type,
+            properties: data.properties
+        }
+    } else if (data.type == "file") {
+        return {
+            type: "string",
+            format: "binary"
+        }
+    }
+
+
+    return {
+        type: data.type
     }
 }

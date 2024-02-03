@@ -15,25 +15,23 @@ export type ValidatePassword = {
     password: string
 }
 
-export type SchemaDataTypes = 'string' | 'number' | 'boolean' | 'array' | 'object'
+export type BaseSchema = {
+    type: 'string' | 'number' | 'boolean' | "file"
+    format ?: string
+    nullable ?: boolean
+}
 
-export type ObjectSchema = {
+export type ObjectSchema<T> = {
     type: "object"
-    properties: Schema
+    properties: Record<keyof T, BaseSchema>
 }
 
-export type ArraySchema = {
+export type ArraySchema<T> = {
     type: "array"
-    properties: Schema
+    items: Record<keyof T, BaseSchema>
 }
 
-export type Schema = ObjectSchema | ArraySchema | {
-    type: 'string' | 'number' | 'boolean'
-    format?: string
-    nullable?: boolean
-}
-
-export type BaseResponseSchema = Schema
+export type BaseResponseSchema<T> = ObjectSchema<T> | ArraySchema<T> | BaseSchema
 
 export type JwtPayload = {
     user_id: number
